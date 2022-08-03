@@ -87,12 +87,12 @@ def dcx(register):
             memory.registers['sp'] = 0xFFFF
     else:
         pair = register_pairings[register]
-        memory.registers[register] -= 1
-        if memory.registers[register] < 0x00:
-            memory.registers[register] = 0xFF
-            memory.registers[pair] -= 1
-            if memory.registers[pair] < 0x00:
-                memory.registers[pair] = 0xFF
+        memory.registers[pair] -= 1
+        if memory.registers[pair] < 0x00:
+            memory.registers[pair] = 0xFF
+            memory.registers[register] -= 1
+            if memory.registers[register] < 0x00:
+                memory.registers[register] = 0xFF
 
 
 def ldax(register):

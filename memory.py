@@ -14,6 +14,7 @@ registers = {
     'e': 0,
     'h': 0,
     'l': 0,
+    'zero': 0,
 }
 
 
@@ -31,6 +32,7 @@ def reset_ram():
         'e': 0,
         'h': 0,
         'l': 0,
+        'zero': 0,
     }
 
 
