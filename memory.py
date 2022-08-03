@@ -17,6 +17,23 @@ registers = {
 }
 
 
+def reset_ram():
+    global ram
+    global registers
+    ram = {}
+    registers = {
+        'pc': 0x0000,
+        'sp': 0x0000,
+        'a': 0,
+        'b': 0,
+        'c': 0,
+        'd': 0,
+        'e': 0,
+        'h': 0,
+        'l': 0,
+    }
+
+
 def read_memory(address):
     try:
         if address < 0x4000:
