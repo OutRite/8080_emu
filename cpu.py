@@ -35,7 +35,6 @@ def boot(address):
             opcodes.nop()
         elif opcode_bin[:2] == '11' and opcode_bin[5:7] == '01':  # JUMP INSTRUCTIONS
             if opcode_bin[2:5] == '000':
-                print(opcode_bin)
                 if opcode_bin[7] == '0':
                     opcodes.jnz()
                 else:
