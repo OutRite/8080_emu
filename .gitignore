@@ -6,3 +6,4 @@ invaders.g
 invaders.h
 .idea/
 __pycache__/
+.coverage

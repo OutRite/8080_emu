@@ -1,5 +1,7 @@
-import screen
-
+if False:
+    import screen
+else:
+    print("WARNING: Display is disabled. Modify memory.py from 'if False' to 'if True' to re-enable this.")
 
 ram = {}
 registers = {
@@ -29,8 +31,11 @@ def write_memory(address, data, restricted=True):
     if restricted:
         if 0x1FFF < address < 0x4000:
             if address > 0x23FF:
-                print(f"updating vram at pc {hex(registers['pc'])}")
-                screen.update(address, data)
+                # print(f"updating vram at pc {hex(registers['pc'])}")
+                try:
+                    screen.update(address, data)
+                except NameError:
+                    pass  # Display is disabled, so continue.
             ram[str(address)] = data
         if 0x3FFF < address < 0x4400:
             ram[str(address - 0x2000)] = data

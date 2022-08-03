@@ -1,8 +1,5 @@
 import memory
 import cpu
-import pygame
-
-import screen
 
 print("Space Invaders Emulator")
 
