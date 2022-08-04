@@ -1,3 +1,7 @@
+import struct
+
+import memory
+
 if False:
     import screen
 else:
@@ -15,13 +19,33 @@ registers = {
     'h': 0,
     'l': 0,
     'zero': 0,
+    'parity': 0,
+    'sign': 0,
+    'carry': 0,
 }
+
+
+def sign(num):
+    # Convert unsigned integer to bytes
+    num = num.to_bytes(1, 'big')
+    # Unpack num as signed integer, return
+    return struct.unpack('b', num)[0]
+
+
+def unsign(num):
+    # Convert signed integer into bytes
+    num = struct.pack('b', num)
+    # Convert bytes into unsigned integer
+    return num[0]
 
 
 def reset_ram():
     global ram
     global registers
     ram = {}
+    # Code that fills the screen completely. Useful for testing.
+    # for i in range(0x2400, 0x4000):
+    #    memory.write_memory(i, 0xff, restricted=True)
     registers = {
         'pc': 0x0000,
         'sp': 0x0000,
@@ -33,6 +57,9 @@ def reset_ram():
         'h': 0,
         'l': 0,
         'zero': 0,
+        'parity': 0,
+        'sign': 0,
+        'carry': 0,
     }
 
 

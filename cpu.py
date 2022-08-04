@@ -40,7 +40,7 @@ def boot(address):
                 else:
                     opcodes.jmp()
             else:
-                UnrecognizedOpcode(f"Unknown JUMP {opcode_bin[2:5]} opcode: {current_opcode}")
+                raise UnrecognizedOpcode(f"Unknown JUMP {opcode_bin[2:5]} opcode: {current_opcode}")
         elif opcode_bin[:2] == '00' and opcode_bin[4:] == '0001':
             opcodes.lxi(rp[opcode_bin[2:4]])
         elif opcode_bin[:2] == '00' and opcode_bin[5:] == '110':
@@ -72,7 +72,12 @@ def boot(address):
                 else:
                     opcodes.ret()
             else:
-                UnrecognizedOpcode(f"Unknown RETURN {opcode_bin[2:5]} opcode: {current_opcode}")
+                raise UnrecognizedOpcode(f"Unknown RETURN {opcode_bin[2:5]} opcode: {current_opcode}")
+        elif opcode_bin[:2] == '11' and opcode_bin[5:] == '110':
+            if opcode_bin[2:5] == '111':
+                opcodes.cpi()
+            else:
+                raise UnrecognizedOpcode(f"Unknown IMMEDIATE {opcode_bin[2:5]} opcode: {current_opcode}")
         else:
             raise UnrecognizedOpcode(f"Opcode {hex(current_opcode)} not recognized at PC {hex(memory.registers['pc'])}")
         memory.registers['pc'] += 1

@@ -129,6 +129,7 @@ def test_dcx():
     cpu.boot(0x0000)
     assert memory.registers['sp'] == 0xFFFF
 
+
 def test_ldax():
     memory.reset_ram()
     memory.registers['b'] = 0x21
@@ -178,3 +179,18 @@ def test_dcr():
     assert memory.registers['h'] == 0x21
     assert memory.registers['l'] == 0x02
     assert memory.read_memory(0x2102) == 0xFF
+
+
+def test_cpi():
+    memory.reset_ram()
+    memory.registers['a'] = 0x10
+    memory.write_memory(0x0000, 0xFE, restricted=False)
+    memory.write_memory(0x0001, 0x10, restricted=False)
+    memory.write_memory(0x0002, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0x10
+    assert memory.registers['zero'] == 1
+    assert memory.registers['sign'] == 0
+    memory.write_memory(0x0001, 0x20, restricted=False)
+    assert memory.registers['zero'] == 0
+    assert memory.registers['sign'] == 1

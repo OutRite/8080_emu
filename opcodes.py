@@ -198,3 +198,30 @@ def inr(register):
         memory.registers['sign'] = 1
     else:
         memory.registers['sign'] = 0
+
+
+def cpi():
+    memory.registers['pc'] += 1
+    compare_from = memory.registers['a']
+    compare_to = memory.read_memory(memory.registers['pc'])
+    # Turn compare_to into a negative number, and then unsign it.
+    compare_to = memory.unsign(0 - memory.sign(compare_to))
+    virtual_a = compare_from + compare_to
+    if virtual_a > 255:
+        virtual_a -= 256
+        memory.registers['carry'] = 1
+    else:
+        memory.registers['carry'] = 0
+    if virtual_a > 127:
+        memory.registers['sign'] = 1
+    else:
+        memory.registers['sign'] = 0
+    if virtual_a == 0:
+        memory.registers['zero'] = 1
+    else:
+        memory.registers['zero'] = 0
+    ones = bin(virtual_a).count('1')
+    if ones/2 == round(ones/2):
+        memory.registers['parity'] = 1
+    else:
+        memory.registers['parity'] = 0
