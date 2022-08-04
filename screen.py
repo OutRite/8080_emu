@@ -17,7 +17,7 @@ def update(address, data):
     address -= 0x2400
     # address *= 8
     coords = coord_cache[str(address)]
-    #print(f"update: {coords} @ {hex(address)} data: {bin(data)}")
+    # print(f"update: {coords} @ {hex(address)} data: {bin(data)}")
     bits = bin(data)[2:]
     while len(bits) < 8:
         bits = '0' + bits

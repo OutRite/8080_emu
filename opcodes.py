@@ -113,6 +113,8 @@ def mov(register_a, register_b):
 def inx(register):
     if register == 'sp':
         memory.registers['sp'] += 1
+        if memory.registers['sp'] > 0xFFFF:
+            memory.registers['sp'] = 0x0000
     else:
         pair = register_pairings[register]
         memory.registers[register] += 1
@@ -124,22 +126,43 @@ def inx(register):
 
 
 def dcr(register):
-    memory.registers[register] -= 1
-    if memory.registers[register] == 0x00:
-        memory.registers['zero'] = 1
+    if register == 'm':
+        address = (memory.registers['h'] << 8) + memory.registers['l']
+        value = memory.read_memory(address)
+        value -= 1
+        if value == 0x00:
+            memory.registers['zero'] = 1
+        else:
+            memory.registers['zero'] = 0
+        if value < 0x00:
+            value = 0xFF
+        memory.write_memory(address, value)
+        ones = bin(value).count('1')
+        if ones/2 == round(ones/2):
+            memory.registers['parity'] = 1
+        else:
+            memory.registers['parity'] = 0
+        if value > 0b01111111:
+            memory.registers['sign'] = 1
+        else:
+            memory.registers['sign'] = 0
     else:
-        memory.registers['zero'] = 0
-    if memory.registers[register] < 0x00:
-        memory.registers[register] = 0xFF
-    ones = bin(memory.registers[register]).count('1')
-    if ones/2 == round(ones/2):
-        memory.registers['parity'] = 1
-    else:
-        memory.registers['parity'] = 0
-    if memory.registers[register] > 0b01111111:
-        memory.registers['sign'] = 1
-    else:
-        memory.registers['sign'] = 0
+        memory.registers[register] -= 1
+        if memory.registers[register] == 0x00:
+            memory.registers['zero'] = 1
+        else:
+            memory.registers['zero'] = 0
+        if memory.registers[register] < 0x00:
+            memory.registers[register] = 0xFF
+        ones = bin(memory.registers[register]).count('1')
+        if ones/2 == round(ones/2):
+            memory.registers['parity'] = 1
+        else:
+            memory.registers['parity'] = 0
+        if memory.registers[register] > 0b01111111:
+            memory.registers['sign'] = 1
+        else:
+            memory.registers['sign'] = 0
 
 
 def jnz():
