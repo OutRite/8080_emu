@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-window = pygame.display.set_mode((224, 256))
+window = pygame.display.set_mode((256, 224))
 pygame.display.set_caption("Space Invaders")
 
 coord_cache = {}

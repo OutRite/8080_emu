@@ -116,7 +116,18 @@ def test_dcx():
     cpu.boot(0x0000)
     assert memory.registers['h'] == 0x97
     assert memory.registers['l'] == 0xFF
-
+    memory.registers['h'] = 0x00
+    memory.registers['l'] = 0x00
+    memory.registers['sp'] = 0x1234
+    cpu.boot(0x0000)
+    assert memory.registers['h'] == 0xFF
+    assert memory.registers['l'] == 0xFF
+    memory.write_memory(0x0000, 0x3b, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['sp'] == 0x1233
+    memory.registers['sp'] = 0x0000
+    cpu.boot(0x0000)
+    assert memory.registers['sp'] == 0xFFFF
 
 def test_ldax():
     memory.reset_ram()
@@ -143,7 +154,7 @@ def test_inx():
     memory.write_memory(0x0001, HALT, restricted=False)
     cpu.boot(0x0000)
     assert memory.registers['d'] == 0x39
-    assert memory.registers['e'] == 0xFF
+    assert memory.registers['e'] == 0x00
     memory.registers['sp'] = 0xFFFF
     memory.write_memory(0x0000, 0x33, restricted=False)
     cpu.boot(0x0000)
