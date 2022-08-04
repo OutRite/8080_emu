@@ -192,5 +192,6 @@ def test_cpi():
     assert memory.registers['zero'] == 1
     assert memory.registers['sign'] == 0
     memory.write_memory(0x0001, 0x20, restricted=False)
+    cpu.boot(0x0000)
     assert memory.registers['zero'] == 0
     assert memory.registers['sign'] == 1
