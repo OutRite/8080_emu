@@ -195,3 +195,58 @@ def test_cpi():
     cpu.boot(0x0000)
     assert memory.registers['zero'] == 0
     assert memory.registers['sign'] == 1
+
+
+def test_push_pop():
+    memory.reset_ram()
+    memory.registers['sp'] = 0x2102
+    memory.registers['d'] = 0x00
+    memory.registers['e'] = 0x10
+    memory.write_memory(0x0000, 0xD5, restricted=False)
+    memory.write_memory(0x0001, 0xC9, restricted=False)
+    memory.write_memory(0x0002, HALT, restricted=False)
+    memory.write_memory(0x0010, HALT, restricted=False)
+    memory.write_memory(0x1000, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['pc'] == 0x0011
+    memory.write_memory(0x0001, 0xE1, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['h'] == 0x00
+    assert memory.registers['l'] == 0x10
+    assert memory.registers['sp'] == 0x2102
+
+
+def test_dad():
+    memory.reset_ram()
+    memory.registers['b'] = 0x33
+    memory.registers['c'] = 0x9F
+    memory.registers['h'] = 0xA1
+    memory.registers['l'] = 0x7B
+    memory.write_memory(0x0000, 0x09, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['h'] == 0xD5
+    assert memory.registers['l'] == 0x1A
+    assert memory.registers['carry'] == 0
+    memory.registers['h'] = 0b11111000
+    memory.registers['l'] = 0
+    memory.write_memory(0x0000, 0x29, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['h'] == 0b11110000
+    assert memory.registers['l'] == 0
+    assert memory.registers['carry'] == 1
+
+
+def test_xchg():
+    memory.reset_ram()
+    memory.registers['d'] = 0x33
+    memory.registers['e'] = 0x55
+    memory.registers['h'] = 0x00
+    memory.registers['l'] = 0xFF
+    memory.write_memory(0x0000, 0xEB, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['d'] == 0x00
+    assert memory.registers['e'] == 0xFF
+    assert memory.registers['h'] == 0x33
+    assert memory.registers['l'] == 0x55

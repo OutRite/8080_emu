@@ -1,7 +1,8 @@
 import pygame
+import time
 
 pygame.init()
-window = pygame.display.set_mode((256, 224))
+window = pygame.display.set_mode((256, 224), pygame.SCALED)
 pygame.display.set_caption("Space Invaders")
 
 coord_cache = {}
@@ -21,6 +22,7 @@ def update(address, data):
     bits = bin(data)[2:]
     while len(bits) < 8:
         bits = '0' + bits
+    bits = bits[::-1]  # Without this, sprites are mirrored.
     for bitindex in range(8):
         x = coords[0] + bitindex
         y = coords[1]
@@ -28,4 +30,4 @@ def update(address, data):
             pygame.draw.line(window, (0x00, 0x00, 0x00), (x, y), (x, y))
         else:
             pygame.draw.line(window, (0xFF, 0xFF, 0xFF), (x, y), (x, y))
-    pygame.display.flip()
+    # pygame.display.flip()

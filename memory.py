@@ -1,11 +1,11 @@
 import struct
+import cpu
+import opcodes
 
-import memory
-
-if False:
+if cpu.display_enabled:
     import screen
 else:
-    print("WARNING: Display is disabled. Modify memory.py from 'if False' to 'if True' to re-enable this.")
+    print("WARNING: Display is disabled. Modify cpu.py display_enabled from 'False' to 'True' to re-enable this.")
 
 ram = {}
 registers = {
@@ -22,6 +22,8 @@ registers = {
     'parity': 0,
     'sign': 0,
     'carry': 0,
+    'aux': 0,
+    'interrupts': 0,
 }
 
 
@@ -44,8 +46,8 @@ def reset_ram():
     global registers
     ram = {}
     # Code that fills the screen completely. Useful for testing.
-    # for i in range(0x2400, 0x4000):
-    #    memory.write_memory(i, 0xff, restricted=True)
+    for i in range(0x2400, 0x4000):
+        write_memory(i, 0xff, restricted=True)
     registers = {
         'pc': 0x0000,
         'sp': 0x0000,
@@ -60,6 +62,8 @@ def reset_ram():
         'parity': 0,
         'sign': 0,
         'carry': 0,
+        'aux': 0,
+        'interrupts': 0,
     }
 
 
@@ -75,7 +79,11 @@ def read_memory(address):
 
 def write_memory(address, data, restricted=True):
     if restricted:
-        if 0x1FFF < address < 0x4000:
+        if opcodes.cpm_mode:
+            min_address = 0x06a5
+        else:
+            min_address = 0x19ff
+        if min_address < address < 0x4000:
             if address > 0x23FF:
                 # print(f"updating vram at pc {hex(registers['pc'])}")
                 try:
@@ -83,8 +91,10 @@ def write_memory(address, data, restricted=True):
                 except NameError:
                     pass  # Display is disabled, so continue.
             ram[str(address)] = data
-        if 0x3FFF < address < 0x4400:
+        elif 0x3FFF < address < 0x4400:
             ram[str(address - 0x2000)] = data
+        else:
+            raise OutOfBoundsException(f"Restricted-mode write to invalid address: {hex(address)}={hex(data)}")
     else:  # This should only be used to load data into RAM before execution.
         ram[str(address)] = data
 
@@ -97,3 +107,7 @@ def load_file(address, file_name):
     for data in file_data:
         write_memory(current_address, data, restricted=False)
         current_address += 1
+
+
+class OutOfBoundsException(Exception):
+    pass
