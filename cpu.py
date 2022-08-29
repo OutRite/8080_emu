@@ -1,8 +1,8 @@
+display_enabled = False
 import memory
 import opcodes
 import pygame
 import inout
-display_enabled = False
 
 rp = {
     '00': 'b',
