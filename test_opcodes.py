@@ -250,3 +250,26 @@ def test_xchg():
     assert memory.registers['e'] == 0xFF
     assert memory.registers['h'] == 0x33
     assert memory.registers['l'] == 0x55
+
+
+def test_sphl():
+    memory.reset_ram()
+    memory.registers['sp'] = 0x2102
+    memory.registers['h'] = 0x20
+    memory.registers['l'] = 0x21
+    memory.write_memory(0x0000, 0xF9, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['sp'] == 0x2021
+    assert memory.registers['h'] == 0x20
+    assert memory.registers['l'] == 0x21
+
+
+def test_rrc():
+    memory.reset_ram()
+    memory.registers['a'] = 0b11110010
+    memory.write_memory(0x0000, 0x0F, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0b01111001
+    assert memory.registers['carry'] == 0
