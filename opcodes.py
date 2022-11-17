@@ -1,5 +1,6 @@
 import inout
 import memory
+
 cpm_mode = False
 
 pop_push_count = 0
@@ -131,11 +132,11 @@ def call():
             else:
                 print(f"\n[CP/M BDOS ERR] Unknown call {memory.registers['c']}")
         else:
-            push(memory.registers['pc']+1)
-            memory.registers['pc'] = final_address-1
+            push(memory.registers['pc'] + 1)
+            memory.registers['pc'] = final_address - 1
     else:
-        push(memory.registers['pc']+1)
-        memory.registers['pc'] = final_address-1
+        push(memory.registers['pc'] + 1)
+        memory.registers['pc'] = final_address - 1
 
 
 def dcx(register):
@@ -196,7 +197,7 @@ def dcr(register):
             value = 0xFF
         memory.write_memory(address, value)
         ones = bin(value).count('1')
-        if ones/2 == round(ones/2):
+        if ones / 2 == round(ones / 2):
             memory.registers['parity'] = 1
         else:
             memory.registers['parity'] = 0
@@ -213,7 +214,7 @@ def dcr(register):
         if memory.registers[register] < 0x00:
             memory.registers[register] = 0xFF
         ones = bin(memory.registers[register]).count('1')
-        if ones/2 == round(ones/2):
+        if ones / 2 == round(ones / 2):
             memory.registers['parity'] = 1
         else:
             memory.registers['parity'] = 0
@@ -236,7 +237,7 @@ def inr(register):
             value = 0x00
         memory.write_memory(address, value)
         ones = bin(value).count('1')
-        if ones/2 == round(ones/2):
+        if ones / 2 == round(ones / 2):
             memory.registers['parity'] = 1
         else:
             memory.registers['parity'] = 0
@@ -253,7 +254,7 @@ def inr(register):
         if memory.registers[register] > 0xFF:
             memory.registers[register] = 0x00
         ones = bin(memory.registers[register]).count('1')
-        if ones/2 == round(ones/2):
+        if ones / 2 == round(ones / 2):
             memory.registers['parity'] = 1
         else:
             memory.registers['parity'] = 0
@@ -292,7 +293,7 @@ def jnc():
 
 
 def ret():
-    memory.registers['pc'] = pop()-1
+    memory.registers['pc'] = pop() - 1
 
 
 def rz():
@@ -350,7 +351,7 @@ def sui():
     else:
         memory.registers['zero'] = 0
     ones = bin(virtual_a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -395,7 +396,6 @@ def inp():
 
 def rrc():
     # carry is last bit of accumulator
-    old_a = memory.registers['a']
     bits = bin(memory.registers['a'])[2:]
     while len(bits) < 8:
         bits = '0' + bits
@@ -405,7 +405,6 @@ def rrc():
 
 
 def rlc():
-    old_a = memory.registers['a']
     bits = bin(memory.registers['a'])[2:]
     while len(bits) < 8:
         bits = '0' + bits
@@ -428,7 +427,7 @@ def ani():
     else:
         memory.registers['sign'] = 0
     ones = bin(result).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -455,7 +454,7 @@ def adi():
     else:
         memory.registers['sign'] = 0
     ones = bin(result).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -494,7 +493,7 @@ def xra(reg):
         memory.registers['zero'] = 0
     memory.registers['sign'] = a >> 7
     ones = bin(a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -516,11 +515,12 @@ def ora(reg):
         memory.registers['zero'] = 0
     memory.registers['sign'] = a >> 7
     ones = bin(a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
     memory.registers['carry'] = 0
+    memory.registers['aux'] = 0
     memory.registers['a'] = a
 
 
@@ -544,19 +544,19 @@ def xri():
 
 
 def ei():
-    #print("Interrupts enabled")
+    # print("Interrupts enabled")
     memory.registers['interrupts'] = 1
 
 
 def di():
-    #print("Interrupts disabled")
+    # print("Interrupts disabled")
     memory.registers['interrupts'] = 0
 
 
 def rst(value):
-    #print(f"RST {value} @ pc {hex(memory.registers['pc'])}")
+    # print(f"RST {value} @ pc {hex(memory.registers['pc'])}")
     push(memory.registers['pc'])
-    memory.registers['pc'] = (value * 8)-1
+    memory.registers['pc'] = (value * 8) - 1
 
 
 def ana(register):
@@ -573,7 +573,7 @@ def ana(register):
         memory.registers['zero'] = 0
     memory.registers['sign'] = a >> 7
     ones = bin(a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -583,14 +583,14 @@ def ana(register):
 
 def xthl():
     new_hl = pop()
-    push((memory.registers['h'] << 8)+memory.registers['l'])
+    push((memory.registers['h'] << 8) + memory.registers['l'])
     memory.registers['h'] = new_hl >> 8
     memory.registers['l'] = new_hl & 0x00FF
 
 
 def pchl():
     address = (memory.registers['h'] << 8) + memory.registers['l']
-    memory.registers['pc'] = address-1
+    memory.registers['pc'] = address - 1
 
 
 def rnz():
@@ -618,7 +618,7 @@ def lhld():
     high = memory.read_memory(memory.registers['pc'])
     address = (high << 8) + low
     memory.registers['l'] = memory.read_memory(address)
-    memory.registers['h'] = memory.read_memory(address+1)
+    memory.registers['h'] = memory.read_memory(address + 1)
 
 
 def shld():
@@ -628,7 +628,7 @@ def shld():
     high = memory.read_memory(memory.registers['pc'])
     address = (high << 8) + low
     memory.write_memory(address, memory.registers['l'])
-    memory.write_memory(address+1, memory.registers['h'])
+    memory.write_memory(address + 1, memory.registers['h'])
 
 
 def rc():
@@ -686,7 +686,7 @@ def aci():
     else:
         memory.registers['sign'] = 0
     ones = bin(result).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -715,7 +715,7 @@ def sbi():
     else:
         memory.registers['zero'] = 0
     ones = bin(virtual_a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -735,7 +735,7 @@ def ori():
     else:
         memory.registers['sign'] = 0
     ones = bin(result).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -771,7 +771,7 @@ def adc(reg):
     else:
         memory.registers['sign'] = 0
     ones = bin(result).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -854,6 +854,10 @@ def add(reg):
         to_add = memory.registers[reg]
     a = memory.registers['a']
     result = a + to_add
+    if (a & 0x0F) + (to_add & 0x0F) > 0x0F:
+        memory.registers['aux'] = 1
+    else:
+        memory.registers['aux'] = 0
     if result > 0xFF:
         result -= 0x100
         memory.registers['carry'] = 1
@@ -898,7 +902,7 @@ def sub(reg):
     else:
         memory.registers['zero'] = 0
     ones = bin(virtual_a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -929,7 +933,7 @@ def sbb(reg):
     else:
         memory.registers['zero'] = 0
     ones = bin(virtual_a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -959,7 +963,7 @@ def cmp(reg):
     else:
         memory.registers['zero'] = 0
     ones = bin(virtual_a).count('1')
-    if ones/2 == round(ones/2):
+    if ones / 2 == round(ones / 2):
         memory.registers['parity'] = 1
     else:
         memory.registers['parity'] = 0
@@ -1010,16 +1014,16 @@ def sphl():
 
 def daa():  # Incredibly scuffed because no AC implementation
     a = memory.registers['a']
-    if a & 0xff > 9 or memory.registers['aux']:
+    if a & 0x0f > 9 or memory.registers['aux']:
         if (a & 0xff) + 6 > 0xff:
             memory.registers['aux'] = 1
         else:
             memory.registers['aux'] = 0
         a += 6
-    if a >> 8 > 9 or memory.registers['carry']:
-        a += 0x600
-    if a > 0xffff:
-        a -= 0x10000
+    if a >> 4 > 9 or memory.registers['carry']:
+        a += 0x60
+    if a > 0xff:
+        a -= 0x100
         memory.registers['carry'] = 1
     memory.registers['a'] = a
     # The carry bit is not reset.
