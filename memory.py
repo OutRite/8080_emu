@@ -94,6 +94,7 @@ def write_memory(address, data, restricted=True):
         elif 0x3FFF < address < 0x4400:
             ram[str(address - 0x2000)] = data
         else:
+            print(f"CRASH @ {hex(registers['pc'])}")
             raise OutOfBoundsException(f"Restricted-mode write to invalid address: {hex(address)}={hex(data)}")
     else:  # This should only be used to load data into RAM before execution.
         ram[str(address)] = data
