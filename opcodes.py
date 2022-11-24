@@ -28,7 +28,7 @@ def lxi(register):
         memory.registers['pc'] += 1
         byte_b = memory.read_memory(memory.registers['pc'])
         final_address = (byte_b << 8) + byte_a
-        if cpm_mode:
+        if cpm_mode:  # pragma: no cover
             if final_address == 0:
                 print("\n[CP/M] Program returned to CP/M")
                 exit()
@@ -116,7 +116,7 @@ def call():
     memory.registers['pc'] += 1
     byte_b = memory.read_memory(memory.registers['pc'])
     final_address = (byte_b << 8) + byte_a
-    if cpm_mode:
+    if cpm_mode:  # pragma: no cover
         if final_address == 0x0005:
             if memory.registers['c'] == 9:
                 msg_address = (memory.registers['d'] << 8) + memory.registers['e']

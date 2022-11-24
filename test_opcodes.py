@@ -339,3 +339,22 @@ def test_stax():
     memory.write_memory(0x0001, HALT, restricted=False)
     cpu.boot(0x0000)
     assert memory.read_memory(0x2102) == 0xBE
+
+
+def test_cmp():
+    memory.reset_ram()
+    memory.registers['a'] = 0x0A
+    memory.registers['e'] = 0x05
+    memory.write_memory(0x0000, 0xBB, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['carry'] == 0
+    assert memory.registers['zero'] == 0
+    memory.registers['a'] = 0x02
+    cpu.boot(0x0000)
+    assert memory.registers['carry'] == 1
+    assert memory.registers['zero'] == 0
+    memory.registers['a'] = 0b11100101
+    cpu.boot(0x0000)
+    assert memory.registers['carry'] == 0
+    assert memory.registers['zero'] == 0
