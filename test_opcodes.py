@@ -286,3 +286,56 @@ def test_daa():
     assert memory.registers['a'] == 0x01
     assert memory.registers['carry'] == 1
     assert memory.registers['aux'] == 1
+
+
+def test_ral():
+    memory.reset_ram()
+    memory.registers['a'] = 0xB5
+    memory.registers['carry'] = 0
+    memory.write_memory(0x0000, 0b00010111, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0x6A
+    assert memory.registers['carry'] == 1
+
+
+def test_rar():
+    memory.reset_ram()
+    memory.registers['a'] = 0x6A
+    memory.registers['carry'] = 1
+    memory.write_memory(0x0000, 0b00011111, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0xB5
+    assert memory.registers['carry'] == 0
+
+
+def test_cma():
+    memory.reset_ram()
+    memory.registers['a'] = 0x51
+    memory.write_memory(0x0000, 0b00101111, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0xAE
+
+
+def test_cmc():
+    memory.reset_ram()
+    memory.registers['carry'] = 0
+    memory.write_memory(0x0000, 0b00111111, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['carry'] == 1
+    cpu.boot(0x0000)
+    assert memory.registers['carry'] == 0
+
+
+def test_stax():
+    memory.reset_ram()
+    memory.registers['b'] = 0x21
+    memory.registers['c'] = 0x02
+    memory.registers['a'] = 0xBE
+    memory.write_memory(0x0000, 0b00000010, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.read_memory(0x2102) == 0xBE
