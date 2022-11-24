@@ -214,6 +214,29 @@ def test_push_pop():
     assert memory.registers['h'] == 0x00
     assert memory.registers['l'] == 0x10
     assert memory.registers['sp'] == 0x2102
+    memory.write_memory(0x0000, 0xF5, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    memory.write_memory(0x000F, 0xF1, restricted=False)
+    memory.registers['a'] = 0x1F
+    memory.registers['carry'] = 1
+    memory.registers['zero'] = 1
+    memory.registers['parity'] = 1
+    memory.registers['sign'] = 0
+    memory.registers['aux'] = 0
+    cpu.boot(0x0000)
+    memory.registers['a'] = 0xDE
+    memory.registers['carry'] = 0
+    memory.registers['zero'] = 0
+    memory.registers['parity'] = 0
+    memory.registers['sign'] = 1
+    memory.registers['aux'] = 1
+    cpu.boot(0x000F)
+    assert memory.registers['a'] == 0x1F
+    assert memory.registers['carry'] == 1
+    assert memory.registers['zero'] == 1
+    assert memory.registers['parity'] == 1
+    assert memory.registers['sign'] == 0
+    assert memory.registers['aux'] == 0
 
 
 def test_dad():

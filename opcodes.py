@@ -76,9 +76,11 @@ def push_reg(register):
         zero = memory.registers['zero']
         parity = memory.registers['parity']
         carry = memory.registers['carry']
+        aux = memory.registers['aux']
         flag = 0
         flag += sign << 7
         flag += zero << 6
+        flag += aux << 4
         flag += parity << 2
         flag += 0b10
         flag += carry
@@ -95,12 +97,14 @@ def pop_reg(register):
     if register == 'psw':
         # Pop PSW
         value = pop()
+        print(value)
         # Set accumulator
         memory.registers['a'] = value >> 8
         # Set flags
         flag = value & 0x00FF
         memory.registers['sign'] = (flag & 0b10000000) >> 7
         memory.registers['zero'] = (flag & 0b01000000) >> 6
+        memory.registers['aux'] = (flag & 0b00010000) >> 4
         memory.registers['parity'] = (flag & 0b00000100) >> 2
         memory.registers['carry'] = flag & 0b00000001
     else:
