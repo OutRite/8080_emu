@@ -97,7 +97,6 @@ def pop_reg(register):
     if register == 'psw':
         # Pop PSW
         value = pop()
-        print(value)
         # Set accumulator
         memory.registers['a'] = value >> 8
         # Set flags
