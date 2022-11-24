@@ -1,8 +1,8 @@
 display_enabled = False
 import memory
 import opcodes
-import pygame
 import inout
+import pygame
 
 rp = {
     '00': 'b',
@@ -91,25 +91,25 @@ def boot(address):
         if instruction_count == 400 and memory.registers['interrupts'] == 1:  # Estimate.
             if not long_interrupt:
                 current_opcode = 0xCF
-                #print("SL96 interrupt")
+                # print("SL96 interrupt")
                 long_interrupt = True
                 instruction_count = 0
             else:
                 if display_enabled:
                     pygame.display.flip()
                 current_opcode = 0xD7
-                #print(f"SL224 interrupt timer={memory.read_memory(0x20c0)}")
+                # print(f"SL224 interrupt timer={memory.read_memory(0x20c0)}")
                 long_interrupt = False
                 instruction_count = 0
         else:
             current_opcode = memory.read_memory(memory.registers['pc'])
-        #print(f"TRACE pc={hex(memory.registers['pc'])} opc={hex(current_opcode)}")
-        #print(f"REGS1 sp={hex(memory.registers['sp'])} a={hex(memory.registers['a'])}")
-        #print(f"REGS2 b={hex(memory.registers['b'])} c={hex(memory.registers['c'])} d={hex(memory.registers['d'])}")
-        #print(f"REGS3 e={hex(memory.registers['e'])} h={hex(memory.registers['h'])} l={hex(memory.registers['l'])}")
-        #print(f"FLAG1 z={memory.registers['zero']} p={memory.registers['parity']} s={memory.registers['sign']}")
-        #print(f"FLAG2 c={memory.registers['carry']} a={memory.registers['aux']}")
-        #print(f"INTRP {memory.registers['interrupts']} IC={instruction_count} LI={long_interrupt}")
+        # print(f"TRACE pc={hex(memory.registers['pc'])} opc={hex(current_opcode)}")
+        # print(f"REGS1 sp={hex(memory.registers['sp'])} a={hex(memory.registers['a'])}")
+        # print(f"REGS2 b={hex(memory.registers['b'])} c={hex(memory.registers['c'])} d={hex(memory.registers['d'])}")
+        # print(f"REGS3 e={hex(memory.registers['e'])} h={hex(memory.registers['h'])} l={hex(memory.registers['l'])}")
+        # print(f"FLAG1 z={memory.registers['zero']} p={memory.registers['parity']} s={memory.registers['sign']}")
+        # print(f"FLAG2 c={memory.registers['carry']} a={memory.registers['aux']}")
+        # print(f"INTRP {memory.registers['interrupts']} IC={instruction_count} LI={long_interrupt}")
         opcode_bin = bin(current_opcode)[2:]
         while len(opcode_bin) < 8:
             opcode_bin = '0' + opcode_bin

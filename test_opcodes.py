@@ -273,3 +273,16 @@ def test_rrc():
     cpu.boot(0x0000)
     assert memory.registers['a'] == 0b01111001
     assert memory.registers['carry'] == 0
+
+
+def test_daa():
+    memory.reset_ram()
+    memory.registers['a'] = 0x9B
+    memory.registers['carry'] = 0
+    memory.registers['aux'] = 0
+    memory.write_memory(0x0000, 0x27, restricted=False)
+    memory.write_memory(0x0001, HALT, restricted=False)
+    cpu.boot(0x0000)
+    assert memory.registers['a'] == 0x01
+    assert memory.registers['carry'] == 1
+    assert memory.registers['aux'] == 1

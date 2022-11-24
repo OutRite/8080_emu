@@ -51,7 +51,7 @@ def out(value):
     if value == 2:
         a = memory.registers['a']
         shift_data['offset'] = a & 0b00000111
-        #print(f"SHIFT OFFSET {shift_data['offset']}")
+        # print(f"SHIFT OFFSET {shift_data['offset']}")
     elif value == 3:
         # Sounds. TODO: Actual sound emulation
         a = memory.registers['a']
@@ -67,7 +67,7 @@ def out(value):
     elif value == 4:
         shift_data['y'] = shift_data['x']
         shift_data['x'] = memory.registers['a']
-        #print(f"New shift data: {shift_data['x']} & {shift_data['y']}")
+        # print(f"New shift data: {shift_data['x']} & {shift_data['y']}")
     elif value == 5:
         # More sounds. TODO: More actual sound emulation
         a = memory.registers['a']

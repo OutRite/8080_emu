@@ -1015,7 +1015,7 @@ def sphl():
 def daa():  # Incredibly scuffed because no AC implementation
     a = memory.registers['a']
     if a & 0x0f > 9 or memory.registers['aux']:
-        if (a & 0xff) + 6 > 0xff:
+        if a & 0x0f + 6 > 0x0f:
             memory.registers['aux'] = 1
         else:
             memory.registers['aux'] = 0
