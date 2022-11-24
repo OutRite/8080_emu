@@ -39,7 +39,7 @@ def boot(address):
     memory.registers['pc'] = address
     running = True
     while running:
-        if display_enabled:
+        if display_enabled:  # pragma: no cover
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -95,7 +95,7 @@ def boot(address):
                 long_interrupt = True
                 instruction_count = 0
             else:
-                if display_enabled:
+                if display_enabled:  # pragma: no cover
                     pygame.display.flip()
                 current_opcode = 0xD7
                 # print(f"SL224 interrupt timer={memory.read_memory(0x20c0)}")
